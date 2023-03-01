@@ -7,7 +7,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { UserProvider } from "./hooks/user.context";
+import { MainProvider } from "./MainContexts";
 import Router from "./Router";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -36,9 +36,9 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <NavigationContainer>
-        <UserProvider>
+        <MainProvider>
           <Router />
-        </UserProvider>
+        </MainProvider>
       </NavigationContainer>
     </ApolloProvider>
   );

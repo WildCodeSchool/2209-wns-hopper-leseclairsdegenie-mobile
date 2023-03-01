@@ -1,20 +1,23 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { Dashboard } from "./screens/Dashboard";
-import { Signin } from "./screens/Signin";
-import { Signup } from "./screens/Signup";
+import { Connection } from "./screens/Connection";
+import { Home } from "./screens/Home";
+import { Products } from "./screens/Products";
+import { PurchaseProces } from "./screens/PurchaseProces";
 
 const Stack = createStackNavigator<{
-  Signup: undefined;
-  Signin: undefined;
-  Dashboard: undefined;
+  Connection: undefined;
+  Home: undefined;
+  Products: undefined;
+  PurchaseProces: undefined;
 }>();
 
 function Router() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Signin" component={Signin} />
-      <Stack.Screen name="Signup" component={Signup} />
-      <Stack.Screen name="Dashboard" component={Dashboard} />
+      <Stack.Screen name="Connection" component={Connection} />
+      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Products" component={Products} />
+      <Stack.Screen name="PurchaseProces" component={PurchaseProces} />
     </Stack.Navigator>
   );
 }
