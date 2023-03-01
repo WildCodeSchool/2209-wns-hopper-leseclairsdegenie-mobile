@@ -1,9 +1,17 @@
 import React from "react";
 import { Text, View } from "react-native";
+import { Notification } from "../components/Notification";
 export function Connection() {
   return (
     <View>
-      <Text>hello</Text>
+      <Text>hello dear</Text>
+      <Notification
+        type="validation"
+        icon="succes"
+        message="HELLO"
+        textButton="TEXTTT"
+        onValidate={() => {}}
+      />
     </View>
   );
 }

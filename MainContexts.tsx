@@ -39,11 +39,6 @@ export const MainProvider: React.FunctionComponent<IMainProvider> = ({
     }
   }, [data]);
   console.log(user);
-  useEffect(() => {
-    if (user === null) {
-      navigate("Connection" as never);
-    }
-  }, [user]);
   return (
     <MainContext.Provider
       value={{
