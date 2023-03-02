@@ -12,7 +12,7 @@ import Router from "./Router";
 import { NavigationContainer } from "@react-navigation/native";
 
 const httpLink = createHttpLink({
-  uri: "http://10.0.2.2:5000",
+  uri: "http://192.168.1.99:5000",
 });
 
 const authLink = setContext(async (_, { headers }) => {

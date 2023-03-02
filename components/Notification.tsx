@@ -37,23 +37,12 @@ export function Notification({
   }, [icon]);
 
   return (
-    <View
-      style={styles.notificationContainer}
-    >
+    <View style={styles.notificationContainer}>
       <View style={styles.background} />
       {type === "validation" && (
-        <View
-          style={styles.notificationContainerContain}
-        >
-          <Image
-            style={styles.notificationIcon}
-            source={iconChosed}
-          />
-          <Text
-            style={styles.notificationMessage}
-          >
-            {message}
-          </Text>
+        <View style={styles.notificationContainerContain}>
+          <Image style={styles.notificationIcon} source={iconChosed} />
+          <Text style={styles.notificationMessage}>{message}</Text>
           <View style={styles.notificationFormSubmit}>
             <Button
               color="#343a55"
@@ -70,9 +59,8 @@ export function Notification({
 const styles = StyleSheet.create({
   notificationContainer: {
     backgroundColor: "transparent",
-    position: "absolute",
     width: width,
-    height: height - 117.11,
+    height: height,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -86,7 +74,8 @@ const styles = StyleSheet.create({
   notificationContainerContain: {
     width: "80%",
     height: "50%",
-    padding: 10,
+    borderRadius: 8,
+    padding: 30,
     alignItems: "center",
     backgroundColor: "#AEF3DA",
     zIndex: 2,
