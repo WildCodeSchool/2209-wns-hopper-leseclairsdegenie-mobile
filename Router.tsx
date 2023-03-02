@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { MainContext } from "./MainContexts";
 import { Connection } from "./screens/Connection";
 import { Home } from "./screens/Home";
+import { MyAccount } from "./screens/MyAccount";
 import { Products } from "./screens/Products";
 import { PurchaseProces } from "./screens/PurchaseProces";
 const Tab = createBottomTabNavigator();
@@ -40,7 +41,7 @@ function Router() {
       <Tab.Screen name="Panier" component={PurchaseProces} />
       <Tab.Screen
         name={!Main?.user?.id ? "Connexion" : "Mon compte"}
-        component={Connection}
+        component={!Main?.user?.id ? Connection : MyAccount}
       />
     </Tab.Navigator>
   );

@@ -67,6 +67,8 @@ export interface IUser {
 
 export interface IConnection {
   onTokenChange: Function;
+  navigation: any;
+  setView: Function;
 }
 
 export interface IAddressOrder {
