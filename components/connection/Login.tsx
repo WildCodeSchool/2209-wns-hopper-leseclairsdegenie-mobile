@@ -138,7 +138,7 @@ export function Login({
     </View>
   );
 }
-const color = "#ffffff";
+const white = "#ffffff";
 const styles = StyleSheet.create({
   loginContainer: {
     backgroundColor: "transparent",
@@ -150,12 +150,13 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   loginInputContainer: {
-    backgroundColor: color,
+    backgroundColor: white,
     height: 55,
+    marginTop: 5,
   },
   loginInputContainer1: {
     marginTop: 10,
-    backgroundColor: color,
+    backgroundColor: white,
     borderWidth: 1,
     borderRadius: 4,
     borderColor: "#B7B8B6",
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
   loginInputTitle: {
     marginLeft: 10,
     color: "#B7B8B6",
-    backgroundColor: color,
+    backgroundColor: white,
     paddingHorizontal: 5,
     marginTop: -10,
     alignSelf: "flex-start",
