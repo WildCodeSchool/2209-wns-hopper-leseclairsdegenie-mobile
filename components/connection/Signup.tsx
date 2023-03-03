@@ -172,6 +172,7 @@ const styles = StyleSheet.create({
   signupInputContainer: {
     backgroundColor: color,
     height: 55,
+    marginTop: 5,
   },
   signupInputContainer1: {
     marginTop: 10,
