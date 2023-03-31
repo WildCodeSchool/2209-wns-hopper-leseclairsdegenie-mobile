@@ -82,7 +82,6 @@ export function PurchaseProces({ navigation }) {
         },
       });
       if (data.verifyReservationsList) {
-        console.log(data);
         setView({
           cart: false,
           address: true,
@@ -134,7 +133,6 @@ export function PurchaseProces({ navigation }) {
       const { data } = await doCreateOrder();
       if (data) {
         console.log("Je paie");
-        console.log(data);
         setOrderId(data.createOrder.id);
       } else {
         console.log("Je peux pas payer");
@@ -156,7 +154,6 @@ export function PurchaseProces({ navigation }) {
     });
   };
 
-  console.log(Main);
   return (
     <ScrollView style={styles.purchaseProcesContainer}>
       {notification && (
@@ -337,14 +334,14 @@ const styles = StyleSheet.create({
   purchaseProcesContainContainer: {},
   purchaseProcesBarStatusItemOn: {
     backgroundColor: "#AEF3DA",
-    paddingHorizontal: 10,
+    paddingHorizontal: 9,
     paddingVertical: 5,
     fontWeight: "500",
     color: "#343A55",
   },
   purchaseProcesBarStatusItemOff: {
     backgroundColor: "#343A55",
-    paddingHorizontal: 10,
+    paddingHorizontal: 9,
     paddingVertical: 5,
     fontWeight: "400",
     color: white,
