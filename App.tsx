@@ -12,6 +12,7 @@ import Router from "./Router";
 import { NavigationContainer } from "@react-navigation/native";
 
 const httpLink = createHttpLink({
+  // uri: "http://localhost:5000/",
   uri: "http://192.168.1.99:5000",
 });
 

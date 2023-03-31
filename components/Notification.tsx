@@ -25,7 +25,6 @@ export function Notification({
   onValidate,
 }: INotification) {
   const [iconChosed, setIconChose] = useState();
-  console.log(height);
   const [backgroundDissable, setBackgroundDissable] = useState(false);
   useEffect(() => {
     if (icon === "succes") {

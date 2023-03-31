@@ -31,9 +31,6 @@ export function Login({
   const [token, setToken] = useState("");
 
   const [doLoginMutation, { loading, error }] = useMutation(signin);
-
-  console.log(email);
-  console.log(password);
   async function doLogin() {
     try {
       const { data } = await doLoginMutation({
