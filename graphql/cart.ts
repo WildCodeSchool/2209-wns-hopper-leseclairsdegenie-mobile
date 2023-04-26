@@ -29,3 +29,11 @@ export const createReservation = gql`
     }
   }
 `;
+
+export const updateReservation = gql`
+  mutation UpdateReservation($data: ReservationInput!, $id: ID!) {
+    updateReservation(data: $data, Id: $id) {
+      id
+    }
+  }
+`;
