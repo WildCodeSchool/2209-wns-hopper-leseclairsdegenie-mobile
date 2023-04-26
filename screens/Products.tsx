@@ -20,15 +20,19 @@ import { getProducts } from "../graphql/productQueries";
 import { ProductCard } from "../components/products/ProductCard";
 import { ProductDetails } from "../components/products/ProductDetails";
 import { MainContext } from "../MainContexts";
+import { NewReservation } from "../components/products/NewReservation";
 const { width, height } = Dimensions.get("window");
 export function Products() {
   const Main = useContext(MainContext);
   const { categorie, setCategorie, categories } = Main;
   const [openModalProduct, setOpenModalProduct] = useState(false);
+  const [openModalNewReservation, setOpenModalNewReservation] = useState(false);
+  const [newReservationProductData, setNewReservationProductData] =
+    useState<IProduct>();
   const [openCategories, setOpenCategories] = useState(false);
   const [researchInput, setResearchInput] = useState("");
   const [researchOn, setResearchOn] = useState(false);
-  const [researchResult, setResearchResult] = useState([]);
+  const [researchResult, setResearchResult] = useState<IProduct[]>([]);
   const [productToOpen, setProductToOpen] = useState<IProduct>();
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -52,9 +56,15 @@ export function Products() {
     };
   }, []);
   const { loading, data, refetch } = useQuery<{ products: IProduct[] }>(
-    getProducts
+    getProducts,
+    { fetchPolicy: "network-only" }
   );
+  useEffect(() => {
+    console.log("sasasassa", data);
+  }, [data]);
+
   const products = data ? data.products : null;
+
   useEffect(() => {
     if (researchInput.length >= 3) {
       const inputUpperCase = researchInput.toUpperCase();
@@ -73,7 +83,11 @@ export function Products() {
             item.description.includes(inputLowerCase) ||
             item.description.includes(capitalizedWord) ||
             item.category.name.includes(capitalizedWord)) &&
-          (categorie.length >= 1 ? item.category.name === categorie : item)
+          (categorie.length >= 1
+            ? item.category.name === categorie
+              ? item
+              : true
+            : true)
       );
       setResearchResult(productSorted);
     }
@@ -86,11 +100,13 @@ export function Products() {
     if (products && categorie.length === 0 && researchInput.length === 0) {
       setResearchResult(products);
     }
-    console.log(categorie);
   }, [researchInput, categorie, data]);
-  const addOnBasket = (productDATA) => {
-    refetch();
+
+  const addOnBasket = (productDATA: IProduct) => {
+    setOpenModalNewReservation(true);
+    setNewReservationProductData(productDATA);
   };
+
   return (
     <View>
       {productToOpen && openModalProduct && (
@@ -115,6 +131,26 @@ export function Products() {
           />
         </Modal>
       )}
+      {newReservationProductData && openModalNewReservation && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={openModalNewReservation}
+          onRequestClose={() => {
+            setNewReservationProductData(undefined);
+            setOpenModalNewReservation(false);
+          }}
+        >
+          <NewReservation
+            closeProductDetails={() => {
+              setNewReservationProductData(undefined);
+              setOpenModalNewReservation(false);
+              Main.refetch();
+            }}
+            product={newReservationProductData}
+          />
+        </Modal>
+      )}
       {openCategories && (
         <Modal
           animationType="slide"
@@ -122,6 +158,7 @@ export function Products() {
           visible={openCategories}
           onRequestClose={() => {
             setOpenCategories(false);
+            setCategorie("");
           }}
         >
           <View style={styles.productsModalCategoriesContainer}>
@@ -209,7 +246,7 @@ export function Products() {
           onScroll={() => setResearchOn(false)}
           renderItem={({ item }) => (
             <ProductCard
-              addOnBasket={(productDATA) => {
+              addOnBasket={(productDATA: IProduct) => {
                 addOnBasket(productDATA);
               }}
               openProduct={(productDATA) => {
@@ -219,7 +256,7 @@ export function Products() {
               product={item}
             />
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => String(item.id)}
         />
       </SafeAreaView>
     </View>
@@ -296,7 +333,7 @@ const styles = StyleSheet.create({
   productsListContainerOneProductKeyboard: {
     flexDirection: "column",
     flexWrap: "wrap",
-    width: "400%",
+    width: "200%",
   },
   productsListContainerOneProduct: {
     flexDirection: "column",

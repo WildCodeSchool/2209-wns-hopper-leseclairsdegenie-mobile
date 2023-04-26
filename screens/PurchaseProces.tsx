@@ -153,11 +153,11 @@ export function PurchaseProces({ navigation }) {
       confirmation: false,
     });
   };
-
+  console.log(Main.user?.cart);
   return (
     <ScrollView style={styles.purchaseProcesContainer}>
       {notification && (
-        <Modal animationType="slide" transparent={true} visible={notification} >
+        <Modal animationType="slide" transparent={true} visible={notification}>
           <Notification
             icon="error"
             type="validation"
