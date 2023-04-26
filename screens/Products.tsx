@@ -14,21 +14,27 @@ import {
   Button,
   Keyboard,
 } from "react-native";
+import { Notification } from "../components/Notification";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ICategory, IProduct } from "../interfaces";
-import { getProducts } from "../graphql/productQueries";
+import { products } from "../graphql/productQueries";
 import { ProductCard } from "../components/products/ProductCard";
 import { ProductDetails } from "../components/products/ProductDetails";
 import { MainContext } from "../MainContexts";
+import { NewReservation } from "../components/products/NewReservation";
 const { width, height } = Dimensions.get("window");
-export function Products() {
+export function Products({ navigation }) {
   const Main = useContext(MainContext);
   const { categorie, setCategorie, categories } = Main;
   const [openModalProduct, setOpenModalProduct] = useState(false);
+  const [notification, setNotification] = useState(false);
+  const [openModalNewReservation, setOpenModalNewReservation] = useState(false);
+  const [newReservationProductData, setNewReservationProductData] =
+    useState<IProduct>();
   const [openCategories, setOpenCategories] = useState(false);
   const [researchInput, setResearchInput] = useState("");
   const [researchOn, setResearchOn] = useState(false);
-  const [researchResult, setResearchResult] = useState([]);
+  const [researchResult, setResearchResult] = useState<IProduct[]>([]);
   const [productToOpen, setProductToOpen] = useState<IProduct>();
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
@@ -52,9 +58,11 @@ export function Products() {
     };
   }, []);
   const { loading, data, refetch } = useQuery<{ products: IProduct[] }>(
-    getProducts
+    products
   );
-  const products = data ? data.products : null;
+  const productsAvailables = data
+    ? data.products.filter((item) => item.disponibility)
+    : null;
   useEffect(() => {
     if (researchInput.length >= 3) {
       const inputUpperCase = researchInput.toUpperCase();
@@ -63,7 +71,7 @@ export function Products() {
       const firstLetterCap = firstLetter.toUpperCase();
       const remainingLetters = researchInput.slice(1);
       const capitalizedWord = firstLetterCap + remainingLetters;
-      const productSorted = products.filter(
+      const productSorted = productsAvailables.filter(
         (item) =>
           (item.name.includes(inputUpperCase) ||
             item.name.includes(inputLowerCase) ||
@@ -77,22 +85,59 @@ export function Products() {
       );
       setResearchResult(productSorted);
     }
-    if (products && categorie.length >= 1 && researchInput.length === 0) {
-      const productSorted = products.filter(
+    if (
+      productsAvailables &&
+      categorie.length >= 1 &&
+      researchInput.length === 0
+    ) {
+      const productSorted = productsAvailables.filter(
         (item) => item.category.name === categorie
       );
       setResearchResult(productSorted);
     }
-    if (products && categorie.length === 0 && researchInput.length === 0) {
-      setResearchResult(products);
+    if (
+      productsAvailables &&
+      categorie.length === 0 &&
+      researchInput.length === 0
+    ) {
+      setResearchResult(productsAvailables);
     }
-    console.log(categorie);
   }, [researchInput, categorie, data]);
-  const addOnBasket = (productDATA) => {
-    refetch();
+
+  const addOnBasket = (productDATA: IProduct) => {
+    if (Main?.user?.id) {
+      setOpenModalNewReservation(true);
+      setNewReservationProductData(productDATA);
+    } else {
+      setNotification(true);
+      setProductToOpen(undefined);
+      setOpenModalProduct(false);
+      setNewReservationProductData(undefined);
+      setOpenModalNewReservation(false);
+    }
   };
+
   return (
     <View>
+      {notification && (
+        <Modal animationType="slide" transparent={true} visible={notification}>
+          <Notification
+            icon="error"
+            type="validation"
+            message={"Connectez vous ou créez un compte !"}
+            textButton={"Aller à la page de connexion"}
+            onValidate={() => {
+              if (!Main?.user) {
+                setNotification(false);
+                navigation.navigate("Connexion");
+              } else {
+                setNotification(false);
+                Main.refetch();
+              }
+            }}
+          />
+        </Modal>
+      )}
       {productToOpen && openModalProduct && (
         <Modal
           animationType="slide"
@@ -115,6 +160,26 @@ export function Products() {
           />
         </Modal>
       )}
+      {newReservationProductData && openModalNewReservation && (
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={openModalNewReservation}
+          onRequestClose={() => {
+            setNewReservationProductData(undefined);
+            setOpenModalNewReservation(false);
+          }}
+        >
+          <NewReservation
+            closeProductDetails={() => {
+              setNewReservationProductData(undefined);
+              setOpenModalNewReservation(false);
+              Main.refetch();
+            }}
+            product={newReservationProductData}
+          />
+        </Modal>
+      )}
       {openCategories && (
         <Modal
           animationType="slide"
@@ -122,6 +187,7 @@ export function Products() {
           visible={openCategories}
           onRequestClose={() => {
             setOpenCategories(false);
+            setCategorie("");
           }}
         >
           <View style={styles.productsModalCategoriesContainer}>
@@ -209,7 +275,7 @@ export function Products() {
           onScroll={() => setResearchOn(false)}
           renderItem={({ item }) => (
             <ProductCard
-              addOnBasket={(productDATA) => {
+              addOnBasket={(productDATA: IProduct) => {
                 addOnBasket(productDATA);
               }}
               openProduct={(productDATA) => {
@@ -219,7 +285,7 @@ export function Products() {
               product={item}
             />
           )}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => String(item.id)}
         />
       </SafeAreaView>
     </View>
@@ -296,7 +362,7 @@ const styles = StyleSheet.create({
   productsListContainerOneProductKeyboard: {
     flexDirection: "column",
     flexWrap: "wrap",
-    width: "400%",
+    width: "200%",
   },
   productsListContainerOneProduct: {
     flexDirection: "column",

@@ -144,8 +144,8 @@ export function PurchaseProces({ navigation }) {
     }
     // Ici post api createOrder, next setOrderId avec res => id new order
   };
-  const resetBasket = () => {
-    Main?.refetch();
+  const resetBasket = async () => {
+    await Main?.refetch();
     setView({
       cart: true,
       address: false,
@@ -153,11 +153,11 @@ export function PurchaseProces({ navigation }) {
       confirmation: false,
     });
   };
-
+  console.log(Main.user?.cart);
   return (
     <ScrollView style={styles.purchaseProcesContainer}>
       {notification && (
-        <Modal animationType="slide" transparent={true} visible={notification} >
+        <Modal animationType="slide" transparent={true} visible={notification}>
           <Notification
             icon="error"
             type="validation"
@@ -173,8 +173,10 @@ export function PurchaseProces({ navigation }) {
             }
             onValidate={() => {
               if (!Main?.user) {
+                setNotification(false);
                 navigation.navigate("Connexion");
               } else {
+                setNotification(false);
                 Main.refetch();
               }
             }}
@@ -224,13 +226,11 @@ export function PurchaseProces({ navigation }) {
       <View style={styles.purchaseProcesContainContainer}>
         {view.cart && (
           <Cart
-            onValidateCart={() =>
-              setView({
-                cart: false,
-                address: true,
-                payment: false,
-                confirmation: false,
-              })
+            navigation={navigation}
+            onValidateCart={
+              Main?.user?.cart?.reservations.length > 0
+                ? () => verifyReservations()
+                : undefined
             }
           />
         )}
