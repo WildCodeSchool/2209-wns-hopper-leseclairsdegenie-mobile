@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Address } from "../components/purchaseProces/Address";
 import { MainContext } from "../MainContexts";
 import { Notification } from "../components/Notification";
@@ -26,6 +26,9 @@ const { width, height } = Dimensions.get("window");
 
 export function PurchaseProces({ navigation }) {
   const Main = useContext(MainContext);
+  useEffect(() => {
+    Main.refetch();
+  }, []);
   const [notification, setNotification] = useState(false);
   const [orderId, setOrderId] = useState<number | undefined>();
   const [view, setView] = useState<IPurchaseProces>({
@@ -144,8 +147,8 @@ export function PurchaseProces({ navigation }) {
     }
     // Ici post api createOrder, next setOrderId avec res => id new order
   };
-  const resetBasket = () => {
-    Main?.refetch();
+  const resetBasket = async () => {
+    await Main?.refetch();
     setView({
       cart: true,
       address: false,
@@ -153,11 +156,11 @@ export function PurchaseProces({ navigation }) {
       confirmation: false,
     });
   };
-
+  console.log(Main.user?.cart);
   return (
     <ScrollView style={styles.purchaseProcesContainer}>
       {notification && (
-        <Modal animationType="slide" transparent={true} visible={notification} >
+        <Modal animationType="slide" transparent={true} visible={notification}>
           <Notification
             icon="error"
             type="validation"
@@ -173,8 +176,10 @@ export function PurchaseProces({ navigation }) {
             }
             onValidate={() => {
               if (!Main?.user) {
+                setNotification(false);
                 navigation.navigate("Connexion");
               } else {
+                setNotification(false);
                 Main.refetch();
               }
             }}
@@ -224,13 +229,11 @@ export function PurchaseProces({ navigation }) {
       <View style={styles.purchaseProcesContainContainer}>
         {view.cart && (
           <Cart
-            onValidateCart={() =>
-              setView({
-                cart: false,
-                address: true,
-                payment: false,
-                confirmation: false,
-              })
+            navigation={navigation}
+            onValidateCart={
+              Main?.user?.cart?.reservations.length > 0
+                ? () => verifyReservations()
+                : undefined
             }
           />
         )}

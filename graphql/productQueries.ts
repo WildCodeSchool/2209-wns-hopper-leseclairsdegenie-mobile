@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const getProducts = gql`
+export const products = gql`
   query Products {
     products {
       id
@@ -13,26 +13,29 @@ export const getProducts = gql`
       category {
         id
         name
+        image
       }
     }
   }
 `;
 
-export const getProduct = gql`
-  query Product($productId: ID!) {
-    product(id: $wilderId) {
-      # category {
-      #     name
-      # }
-      description
-      disponibility
-      image
-      name
-      price
-      # ajouter réservations
-    }
-  }
-`;
+// export const getProduct = gql`
+//   query Product($productId: ID!) {
+//     product(id: $wilderId) {
+//       # category {
+//       #     id   
+//       #     name
+//       #     image   
+//       # }
+//       description
+//       disponibility
+//       image
+//       name
+//       price
+//       # ajouter réservations
+//     }
+//   }
+// `;
 
 export const createProduct = gql`
   mutation createProduct($data: ProductInput!) {
@@ -40,6 +43,7 @@ export const createProduct = gql`
       category {
         id
         name
+        image
       }
       description
       disponibility
@@ -56,6 +60,7 @@ export const updateWilder = gql`
       category {
         id
         name
+        image
       }
       description
       disponibility

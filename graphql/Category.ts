@@ -21,6 +21,7 @@ export const getCategories = gql`
         categories {
           id
           name
+          image
         }
 }
 `

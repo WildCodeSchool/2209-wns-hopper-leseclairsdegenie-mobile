@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   TouchableOpacity,
   View,
@@ -14,6 +14,9 @@ const { width, height } = Dimensions.get("window");
 
 export function MyAccount({ navigation }) {
   const Main = useContext(MainContext);
+  useEffect(() => {
+    Main.refetch();
+  }, []);
   const logout = () => {
     Main?.setUser(undefined);
     AsyncStorage.removeItem("token");
@@ -23,7 +26,7 @@ export function MyAccount({ navigation }) {
   return (
     <View style={styles.connectionContainContainer}>
       <TouchableOpacity onPress={() => logout()}>
-        <Text >Go Out</Text>
+        <Text>Go Out</Text>
       </TouchableOpacity>
     </View>
   );

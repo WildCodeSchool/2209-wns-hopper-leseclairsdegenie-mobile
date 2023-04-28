@@ -16,8 +16,24 @@ export const verifyReservationsList = gql`
 
 export const createOrder = gql`
   mutation CreateOrder {
-  createOrder {
-    id
+    createOrder {
+      id
+    }
   }
-}
+`;
+
+export const createReservation = gql`
+  mutation CreateReservation($data: ReservationInput!) {
+    createReservation(data: $data) {
+      id
+    }
+  }
+`;
+
+export const updateReservation = gql`
+  mutation UpdateReservation($data: ReservationInput!, $id: ID!) {
+    updateReservation(data: $data, Id: $id) {
+      id
+    }
+  }
 `;

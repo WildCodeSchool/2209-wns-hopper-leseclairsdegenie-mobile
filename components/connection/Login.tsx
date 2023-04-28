@@ -26,8 +26,8 @@ export function Login({
   const [notification, setNotification] = useState(false);
   const [notificationError, setNotificationError] = useState(false);
   const [seePassword, setSeePassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("test@test.com");
+  const [password, setPassword] = useState("12345678");
   const [token, setToken] = useState("");
 
   const [doLoginMutation, { loading, error }] = useMutation(signin);

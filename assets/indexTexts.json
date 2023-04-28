@@ -5,6 +5,6 @@
   "loginNotificationTextButton": "Continuer",
   "loginNotificationErrorMessage": "Il y a un problème avec votre compte",
   "loginNotificationTextErrorButton": "Réessayer",
-  "purchaseProcesNotificationMessage": "Ups, il y a un problème 😬",
-  "purchaseProcesNotificationTextButton": "Recharger la page"
+  "purchaseProcesNotificationMessage": "Ups, il y a un problème, certains produits ne sont plus disponibles, désolé 😬",
+  "purchaseProcesNotificationTextButton": "Retour"
 }
