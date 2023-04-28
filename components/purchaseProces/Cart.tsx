@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   TouchableOpacity,
   View,
@@ -36,6 +36,7 @@ export function Cart({
   const [showEndDate, setShowEndDate] = useState(false);
   const [reservationIdToUpdate, setReservationIdToUpdate] = useState<number>();
   const [doUpdateReservation] = useMutation(updateReservation);
+  const [totalCart, setTotalCart] = useState<number>();
   const onChangeReservation = async (
     reservation: IReservation,
     newData: { newQuantity?: number; newStartDate?: Date; newEndDate?: Date }
@@ -112,6 +113,26 @@ export function Cart({
     const formattedDate = dd + "/" + mm + "/" + yyyy;
     return formattedDate;
   };
+  useEffect(() => {
+    const totalOfReservations = Main?.user?.cart?.reservations.map(
+      (reservation) =>
+        reservation.product.price *
+        reservation.quantity *
+        Math.ceil(
+          (new Date(reservation.endDate).getTime() -
+            new Date(reservation.startDate).getTime()) /
+            (1000 * 3600 * 24)
+        )
+    );
+    if (totalOfReservations) {
+      const addReservations = totalOfReservations.reduce((a, b) => {
+        return a + b;
+      }, 0);
+      if (addReservations) {
+        setTotalCart(addReservations);
+      }
+    }
+  });
   return (
     <View
     // className="addressContainer"
@@ -277,6 +298,10 @@ export function Cart({
       )}
       {onValidateCart && (
         <View style={styles.purchaseProcesButtonsContainerCenter}>
+          <View style={styles.containerCard}>
+            <Text>Total : </Text>
+            <Text>{totalCart ? totalCart : 0}€</Text>
+          </View>
           <TouchableOpacity
             style={styles.purchaseProcesButtonsNext}
             // className="addressFormFieldAddress"
@@ -379,7 +404,7 @@ const styles = StyleSheet.create({
   },
   purchaseProcesButtonsContainerCenter: {
     width: "100%",
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 50,

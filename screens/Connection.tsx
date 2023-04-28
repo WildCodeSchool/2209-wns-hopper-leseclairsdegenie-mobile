@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   TouchableOpacity,
   View,
@@ -16,6 +16,9 @@ const { width, height } = Dimensions.get("window");
 
 export function Connection({ navigation }) {
   const Main = useContext(MainContext);
+  useEffect(() => {
+    Main.refetch();
+  }, []);
   const [view, setView] = useState(true); // true = login, false = signup
 
   function onTokenChange(token: string) {

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Address } from "../components/purchaseProces/Address";
 import { MainContext } from "../MainContexts";
 import { Notification } from "../components/Notification";
@@ -26,6 +26,9 @@ const { width, height } = Dimensions.get("window");
 
 export function PurchaseProces({ navigation }) {
   const Main = useContext(MainContext);
+  useEffect(() => {
+    Main.refetch();
+  }, []);
   const [notification, setNotification] = useState(false);
   const [orderId, setOrderId] = useState<number | undefined>();
   const [view, setView] = useState<IPurchaseProces>({
