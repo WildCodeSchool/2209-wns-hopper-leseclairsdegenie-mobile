@@ -25,6 +25,9 @@ import { NewReservation } from "../components/products/NewReservation";
 const { width, height } = Dimensions.get("window");
 export function Products({ navigation }) {
   const Main = useContext(MainContext);
+  useEffect(() => {
+    Main.refetch();
+  }, []);
   const { categorie, setCategorie, categories } = Main;
   const [openModalProduct, setOpenModalProduct] = useState(false);
   const [notification, setNotification] = useState(false);
@@ -171,10 +174,11 @@ export function Products({ navigation }) {
           }}
         >
           <NewReservation
-            closeProductDetails={() => {
+            navigation={navigation}
+            closeProductDetails={async () => {
               setNewReservationProductData(undefined);
               setOpenModalNewReservation(false);
-              Main.refetch();
+              await Main.refetch();
             }}
             product={newReservationProductData}
           />

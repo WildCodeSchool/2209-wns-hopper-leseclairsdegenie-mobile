@@ -32,7 +32,6 @@ export interface IOrder {
   statusDelivery: string;
   date: Date;
   reservations: IReservation[];
-  cart?: ICart;
 }
 
 export interface ICategoryProps {
@@ -42,6 +41,7 @@ export interface ICategoryProps {
 export interface ICategory {
   id: number;
   name: string;
+  image: string;
 }
 
 export interface ICart {
@@ -65,6 +65,7 @@ export interface IUser {
   deliveryAdress: string;
   createdAt: Date;
   cart: ICart;
+  orders: IOrder[];
 }
 
 export interface IConnection {

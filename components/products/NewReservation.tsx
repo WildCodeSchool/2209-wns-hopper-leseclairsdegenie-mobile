@@ -24,9 +24,11 @@ const { width, height } = Dimensions.get("window");
 interface IProductDetailsProps {
   product: IProduct | null;
   closeProductDetails: Function;
+  navigation: any;
 }
 
 export function NewReservation({
+  navigation,
   product,
   closeProductDetails,
 }: IProductDetailsProps) {
@@ -56,6 +58,7 @@ export function NewReservation({
         },
       });
       if (data) {
+        navigation.navigate("Panier");
         closeProductDetails();
         console.log("revervated");
       } else {

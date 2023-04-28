@@ -13,6 +13,7 @@ export const products = gql`
       category {
         id
         name
+        image
       }
     }
   }
@@ -22,7 +23,9 @@ export const products = gql`
 //   query Product($productId: ID!) {
 //     product(id: $wilderId) {
 //       # category {
+//       #     id   
 //       #     name
+//       #     image   
 //       # }
 //       description
 //       disponibility
@@ -40,6 +43,7 @@ export const createProduct = gql`
       category {
         id
         name
+        image
       }
       description
       disponibility
@@ -56,6 +60,7 @@ export const updateWilder = gql`
       category {
         id
         name
+        image
       }
       description
       disponibility

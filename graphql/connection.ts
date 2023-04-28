@@ -49,40 +49,42 @@ export const me = gql`
             category {
               id
               name
+              image
             }
           }
         }
-        order {
+      }
+      orders {
+        id
+        billingfirstname
+        billingLastname
+        billingAdress
+        deliveryfirstname
+        deliveryLastname
+        deliveryAdress
+        totalPrice
+        statusDelivery
+        date
+        reservations {
           id
-          billingfirstname
-          billingLastname
-          billingAdress
-          deliveryfirstname
-          deliveryLastname
-          deliveryAdress
-          totalPrice
-          statusDelivery
-          date
-          reservations {
+          startDate
+          endDate
+          quantity
+          price
+          taxes
+          nbJours
+          product {
             id
-            startDate
-            endDate
-            quantity
+            name
+            description
+            image
             price
-            taxes
-            nbJours
-            product {
+            quantity
+            disponibility
+            category {
               id
               name
-              description
               image
-              price
-              quantity
-              disponibility
-              category {
-                id
-                name
-              }
             }
           }
         }
