@@ -1,10 +1,11 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import React, { createContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { me } from "./graphql/connection";
-import { ICategory, IUser } from "./interfaces";
+import { me, saveTokenNotificationPush } from "./graphql/connection";
+import { ICategory, INotificationPush, IUser } from "./interfaces";
 import { getCategories } from "./graphql/Category";
 interface IMainProvider {
+  expoPushToken?: string;
   children?: React.ReactNode;
 }
 export interface IMainContexts {
@@ -14,14 +15,16 @@ export interface IMainContexts {
   categorie: string;
   setCategorie: Function;
   categories: ICategory[] | [];
+  notificationPush: INotificationPush | {};
+  setNotificationPush: Function;
 }
 
 export const MainContext = createContext<IMainContexts | null>(null);
 
 export const MainProvider: React.FunctionComponent<IMainProvider> = ({
+  expoPushToken,
   children,
 }: IMainProvider): JSX.Element => {
-  const { navigate, reset } = useNavigation();
   const [categorie, setCategorie] = useState("");
   const [user, setUser] = useState<IUser | null | undefined>(undefined);
   const { data, refetch, error } = useQuery(me, {
@@ -43,6 +46,7 @@ export const MainProvider: React.FunctionComponent<IMainProvider> = ({
       }
     }
   }, [data]);
+  console.log(user);
 
   const [categories, setCategories] = useState<ICategory[] | []>([]);
   const categoriesData = useQuery(getCategories, {});
@@ -61,6 +65,32 @@ export const MainProvider: React.FunctionComponent<IMainProvider> = ({
       }
     }
   }, [categoriesData.data]);
+  const [doSaveTokenNotificationPush] = useMutation(saveTokenNotificationPush);
+  const newSaveTokenNotificationPush = async (tokenNotificationPush) => {
+    try {
+      const { data } = await doSaveTokenNotificationPush({
+        variables: {
+          token: tokenNotificationPush,
+          userId: user?.id ? user?.id : "",
+        },
+      });
+      if (data) {
+        console.log(data);
+      }
+    } catch {
+      console.log("error save notification push");
+    }
+  };
+  useEffect(() => {
+    if (expoPushToken) {
+      console.log(expoPushToken);
+      newSaveTokenNotificationPush(expoPushToken);
+    }
+  }, [expoPushToken, user]);
+
+  const [notificationPush, setNotificationPush] = useState<
+    INotificationPush | {}
+  >();
   return (
     <MainContext.Provider
       value={{
@@ -70,6 +100,8 @@ export const MainProvider: React.FunctionComponent<IMainProvider> = ({
         categorie,
         setCategorie,
         categories,
+        notificationPush,
+        setNotificationPush,
       }}
     >
       {children}

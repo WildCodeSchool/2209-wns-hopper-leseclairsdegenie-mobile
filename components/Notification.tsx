@@ -16,6 +16,8 @@ interface INotification {
   message: string;
   textButton: string;
   onValidate: Function;
+  onClose?: Function;
+  textButton2?: string;
 }
 export function Notification({
   type,
@@ -23,6 +25,8 @@ export function Notification({
   message,
   textButton,
   onValidate,
+  onClose,
+  textButton2,
 }: INotification) {
   const [iconChosed, setIconChose] = useState();
   const [backgroundDissable, setBackgroundDissable] = useState(false);
@@ -43,8 +47,15 @@ export function Notification({
           <Image style={styles.notificationIcon} source={iconChosed} />
           <Text style={styles.notificationMessage}>{message}</Text>
           <View style={styles.notificationFormSubmit}>
+            {onClose && (
+              <Button
+                color="#343a55"
+                title={textButton2}
+                onPress={(): void => onClose()}
+              />
+            )}
             <Button
-              color="#343a55"
+              color={onClose ? "#CF1515" : "#343a55"}
               title={textButton}
               onPress={(): void => onValidate()}
             />
@@ -92,7 +103,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   notificationFormSubmit: {
-    minWidth: "50%",
+    Width: "100%",
     marginBottom: 10,
+    backgroundColor: "red",
+    flexDirection: "row",
+    alignItems: "flex-start",
   },
 });

@@ -8,15 +8,18 @@ import {
   ScrollView,
   Dimensions,
   Button,
+  Modal,
 } from "react-native";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
 import { MainContext } from "../../MainContexts";
 import { useMutation } from "@apollo/client";
-import { updateReservation } from "../../graphql/cart";
+import { deleteReservation, updateReservation } from "../../graphql/cart";
 import { IReservation } from "../../interfaces";
 const { width, height } = Dimensions.get("window");
+import { Notification } from "..//Notification";
+import { me } from "../../graphql/connection";
 
 export function Cart({
   onValidateCart,
@@ -25,6 +28,7 @@ export function Cart({
   onValidateCart: Function | undefined;
   navigation: any;
 }): JSX.Element {
+  const [notification, setNotification] = useState(false);
   function addDays(date, days) {
     const copyDate = new Date(Number(date));
     copyDate.setDate(date.getDate() + days);
@@ -35,8 +39,8 @@ export function Cart({
   const [showStartDate, setShowStartDate] = useState(false);
   const [showEndDate, setShowEndDate] = useState(false);
   const [reservationIdToUpdate, setReservationIdToUpdate] = useState<number>();
-  const [doUpdateReservation] = useMutation(updateReservation);
   const [totalCart, setTotalCart] = useState<number>();
+  const [doUpdateReservation] = useMutation(updateReservation);
   const onChangeReservation = async (
     reservation: IReservation,
     newData: { newQuantity?: number; newStartDate?: Date; newEndDate?: Date }
@@ -133,6 +137,18 @@ export function Cart({
       }
     }
   });
+  const [doDeleteReservation, { loading, error }] =
+    useMutation(deleteReservation);
+
+  const deleteResa = async (idReservation) => {
+    await doDeleteReservation({
+      variables: {
+        id: idReservation,
+      },
+    });
+    await Main.refetch();
+    setNotification(false);
+  };
   return (
     <View
     // className="addressContainer"
@@ -142,6 +158,27 @@ export function Cart({
           .sort((a, b) => a.id - b.id)
           .map((reservation) => (
             <View key={reservation.id} style={styles.containerCard}>
+              {notification && (
+                <Modal
+                  animationType="slide"
+                  transparent={true}
+                  visible={notification}
+                >
+                  <Notification
+                    icon="error"
+                    type="validation"
+                    message={"Voulez‑vous vraiment supprimer cet article ?"}
+                    textButton={"Supprimer"}
+                    onValidate={() => {
+                      deleteResa(reservation.id);
+                    }}
+                    onClose={() => {
+                      setNotification(false);
+                    }}
+                    textButton2={"Annuler"}
+                  />
+                </Modal>
+              )}
               <Image
                 style={styles.tinyLogo}
                 source={{ uri: reservation.product.image }}
@@ -166,6 +203,9 @@ export function Cart({
                         };
                         await onChangeReservation(reservation, newData);
                         await Main.refetch();
+                      }
+                      if (reservation.quantity === 1) {
+                        setNotification(true);
                       }
                     }}
                     title="-"

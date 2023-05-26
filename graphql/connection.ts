@@ -12,6 +12,12 @@ export const signin = gql`
   }
 `;
 
+export const saveTokenNotificationPush = gql`
+  mutation SaveTokenNotificationPush($userId: ID!, $token: String!) {
+    saveTokenNotificationPush(userId: $userId, token: $token)
+  }
+`;
+
 export const me = gql`
   query Me {
     me {
