@@ -69,21 +69,9 @@ export function Products({ navigation }) {
   useEffect(() => {
     if (researchInput.length >= 3) {
       const inputUpperCase = researchInput.toUpperCase();
-      const inputLowerCase = researchInput.toLowerCase();
-      const firstLetter = researchInput.charAt(0);
-      const firstLetterCap = firstLetter.toUpperCase();
-      const remainingLetters = researchInput.slice(1);
-      const capitalizedWord = firstLetterCap + remainingLetters;
       const productSorted = productsAvailables.filter(
         (item) =>
-          (item.name.includes(inputUpperCase) ||
-            item.name.includes(inputLowerCase) ||
-            item.name.includes(capitalizedWord) ||
-            item.category.name.includes(capitalizedWord) ||
-            item.description.includes(inputUpperCase) ||
-            item.description.includes(inputLowerCase) ||
-            item.description.includes(capitalizedWord) ||
-            item.category.name.includes(capitalizedWord)) &&
+          item.name.toUpperCase().includes(inputUpperCase) &&
           (categorie.length >= 1 ? item.category.name === categorie : item)
       );
       setResearchResult(productSorted);

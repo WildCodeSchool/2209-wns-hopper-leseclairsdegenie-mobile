@@ -46,5 +46,4 @@ function Router() {
     </Tab.Navigator>
   );
 }
-
 export default Router;

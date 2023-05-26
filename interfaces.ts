@@ -96,3 +96,8 @@ export interface IAddressComponent {
   address: IAddressOrder;
   setAddress: Function;
 }
+
+export interface INotificationPush {
+  type: "newProduct";
+  notificationId: number;
+}
