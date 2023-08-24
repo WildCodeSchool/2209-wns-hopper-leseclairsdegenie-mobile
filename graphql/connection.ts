@@ -7,14 +7,30 @@ export const createUser = gql`
 `;
 
 export const signin = gql`
-  mutation Signin($password: String!, $email: String!) {
-    signin(password: $password, email: $email)
+  mutation Signin($data: UserInput!) {
+    signin(data: $data)
   }
 `;
 
 export const saveTokenNotificationPush = gql`
   mutation SaveTokenNotificationPush($userId: ID!, $token: String!) {
     saveTokenNotificationPush(userId: $userId, token: $token)
+  }
+`;
+
+export const sendNotificationPush = gql`
+  mutation SendNotificationPush(
+    $expoPushToken: String!
+    $data: DataNotificationInput!
+    $body: String!
+    $title: String!
+  ) {
+    sendNotificationPush(
+      expoPushToken: $expoPushToken
+      data: $data
+      body: $body
+      title: $title
+    )
   }
 `;
 

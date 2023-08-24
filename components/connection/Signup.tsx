@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useMutation } from "@apollo/client";
 import { Notification } from "../Notification";
 const eye = require("../../assets/images/oeil.png");
 const vue = require("../../assets/images/vue.png");
 import indexTexts from "../../assets/indexTexts.json";
 import { IConnection } from "../../interfaces";
-import { createUser } from "../../graphql/connection";
+import { createUser, sendNotificationPush } from "../../graphql/connection";
 import {
   Text,
   TextInput,
@@ -16,6 +16,7 @@ import {
   Dimensions,
   Modal,
 } from "react-native";
+import { MainContext } from "../../MainContexts";
 const { width, height } = Dimensions.get("window");
 
 export function Signup({
@@ -23,6 +24,7 @@ export function Signup({
   navigation,
   onTokenChange,
 }: IConnection): JSX.Element {
+  const Main = useContext(MainContext);
   const [notification, setNotification] = useState(false);
   const [notificationError, setNotificationError] = useState(false);
   const [seePassword, setSeePassword] = useState(false);
@@ -32,6 +34,8 @@ export function Signup({
   const [lastname, setLastname] = useState("");
 
   const [doSignupMutation, { loading, error }] = useMutation(createUser);
+
+  const [sendNotificationPushMutation] = useMutation(sendNotificationPush);
 
   async function doSignup() {
     try {
@@ -47,6 +51,14 @@ export function Signup({
       });
       if (data.createUser) {
         onTokenChange(data.createUser);
+        sendNotificationPushMutation({
+          variables: {
+            title: `Bienvenu ! ${firstname}`,
+            body: "Nous allons piquer tous vos mots de passe et données perso de votre smartphone 👺",
+            data: { notificationId: "1234", type: "newProduct" },
+            expoPushToken: Main.expoPushToken,
+          },
+        });
         setNotification(true);
       } else {
         setEmail("");

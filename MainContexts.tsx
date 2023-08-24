@@ -17,6 +17,7 @@ export interface IMainContexts {
   categories: ICategory[] | [];
   notificationPush: INotificationPush | {};
   setNotificationPush: Function;
+  expoPushToken: string;
 }
 
 export const MainContext = createContext<IMainContexts | null>(null);
@@ -75,7 +76,6 @@ export const MainProvider: React.FunctionComponent<IMainProvider> = ({
         },
       });
       if (data) {
-        console.log(data);
       }
     } catch {
       console.log("error save notification push");
@@ -83,7 +83,6 @@ export const MainProvider: React.FunctionComponent<IMainProvider> = ({
   };
   useEffect(() => {
     if (expoPushToken) {
-      console.log(expoPushToken);
       newSaveTokenNotificationPush(expoPushToken);
     }
   }, [expoPushToken, user]);
@@ -102,6 +101,7 @@ export const MainProvider: React.FunctionComponent<IMainProvider> = ({
         categories,
         notificationPush,
         setNotificationPush,
+        expoPushToken,
       }}
     >
       {children}

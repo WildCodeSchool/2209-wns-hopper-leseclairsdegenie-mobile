@@ -35,8 +35,7 @@ export function Login({
     try {
       const { data } = await doLoginMutation({
         variables: {
-          email,
-          password,
+          data: { email, password },
         },
       });
       // data.signin = "uijbsdgbsdogjuvb";
@@ -54,7 +53,9 @@ export function Login({
         setToken("");
         setNotificationError(true);
       }
-    } catch {}
+    } catch {
+      console.log("error login");
+    }
   }
   return (
     <View style={styles.loginContainer}>

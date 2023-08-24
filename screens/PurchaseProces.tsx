@@ -78,28 +78,34 @@ export function PurchaseProces({ navigation }) {
   const [doSaveReservations] = useMutation(verifyReservationsList);
   const verifyReservations = async () => {
     await Main?.refetch();
-    try {
-      const { data } = await doSaveReservations({
-        variables: {
-          id: Main?.user?.cart.id,
-        },
-      });
-      if (data.verifyReservationsList) {
-        setView({
-          cart: false,
-          address: true,
-          payment: false,
-          confirmation: false,
-        });
-        console.log("Alls reservations are availables");
-      } else {
-        console.log("A reservaton is not available");
-        setNotification(true);
-      }
-    } catch {
-      console.log("error updateCart");
-      setNotification(true);
-    }
+    // try {
+    //   const { data } = await doSaveReservations({
+    //     variables: {
+    //       id: Main?.user?.cart.id,
+    //     },
+    //   });
+    //   if (data.verifyReservationsList) {
+    //     setView({
+    //       cart: false,
+    //       address: true,
+    //       payment: false,
+    //       confirmation: false,
+    //     });
+    //     console.log("Alls reservations are availables");
+    //   } else {
+    //     console.log("A reservaton is not available");
+    //     setNotification(true);
+    //   }
+    // } catch {
+    //   console.log("error updateCart");
+    //   setNotification(true);
+    // }
+    setView({
+      cart: false,
+      address: true,
+      payment: false,
+      confirmation: false,
+    });
   };
 
   const [doUpdateCart] = useMutation(updateCart);
@@ -156,7 +162,6 @@ export function PurchaseProces({ navigation }) {
       confirmation: false,
     });
   };
-  console.log(Main.user?.cart);
   return (
     <ScrollView style={styles.purchaseProcesContainer}>
       {notification && (

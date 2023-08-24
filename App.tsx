@@ -19,7 +19,8 @@ import { saveTokenNotificationPush } from "./graphql/connection";
 
 const httpLink = createHttpLink({
   // uri: "http://localhost:5000/",
-  uri: "http://192.168.0.26:5000",
+  // Your IP :
+  uri: "http://192.168.1.20:5000",
 });
 
 const authLink = setContext(async (_, { headers }) => {
@@ -61,7 +62,6 @@ async function registerForPushNotificationsAsync() {
       return;
     }
     token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
   } else {
     alert("Must use physical device for Push Notifications");
   }

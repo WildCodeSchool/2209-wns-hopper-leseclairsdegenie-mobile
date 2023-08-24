@@ -58,6 +58,7 @@ export function NewReservation({
         },
       });
       if (data) {
+        console.log(data);
         navigation.navigate("Panier");
         closeProductDetails();
         console.log("revervated");
